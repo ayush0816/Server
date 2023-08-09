@@ -21,11 +21,6 @@ const adminSchema = new mongoose.Schema({
         required: true,
         ref: "Chat",
       },
-      msgid: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "ChatMessage",
-      },
     },
   ],
 });

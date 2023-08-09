@@ -10,9 +10,8 @@ const chatSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  agent: {
+  agentid: {
     type: String,
-    required: true,
     ref: "Agent",
   },
   timestamp: {
@@ -22,10 +21,6 @@ const chatSchema = new mongoose.Schema({
   urgent: {
     type: Boolean,
     default: false,
-  },
-  agentHaveAccess: {
-    type: Boolean,
-    default: true,
   },
 });
 
