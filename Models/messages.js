@@ -6,7 +6,7 @@ const chatSchema = new mongoose.Schema({
     required: true,
     ref: "Chat",
   },
-  senderType: {
+  sender: {
     type: String,
     required: true,
   },
