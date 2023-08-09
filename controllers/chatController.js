@@ -1,5 +1,6 @@
 const ChatModel = require("../Models/chat");
 const UserModel = require("../Models/user");
+const MessageModel = require("../Models/messages");
 
 const createChat = async (req, res) => {
   try {
@@ -37,8 +38,18 @@ const getChats = async (req, res) => {
     }
 
     const chatIds = user.chatMsgs.map((chatMsg) => chatMsg.chatid);
+    const messages = await MessageModel.find({ chatId: { $in: chatIds } });
 
-    res.status(200).json({ chatIds });
+    // Organize messages by chatId
+    const messagesByChat = {};
+    messages.forEach((message) => {
+      if (!messagesByChat[message.chatId]) {
+        messagesByChat[message.chatId] = [];
+      }
+      messagesByChat[message.chatId].push(message);
+    });
+
+    res.status(200).json({ messagesByChat });
   } catch (error) {
     console.error("Error fetching user chats:", error);
     res.status(500).json({ message: "Internal server error" });
