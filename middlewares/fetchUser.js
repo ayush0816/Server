@@ -6,7 +6,8 @@ const fetchUser = (req, res, next) => {
     return res.status(401).send("please enter valid token");
   }
   const data = jwt.verify(token, "SECRET");
-  req.id = data.id;
+
+  req.id = data.userId;
   next();
 };
 

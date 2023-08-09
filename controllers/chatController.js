@@ -4,6 +4,7 @@ const UserModel = require("../Models/user");
 const createChat = async (req, res) => {
   try {
     const { chatname, urgent } = req.body;
+    console.log(req.body);
     const userId = req.id;
 
     const chat = new ChatModel({
@@ -11,7 +12,8 @@ const createChat = async (req, res) => {
       chatname,
       urgent,
     });
-
+    console.log(userId);
+    await chat.save();
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });

@@ -1,8 +1,9 @@
 const msgController = require("../controllers/msgController");
 const fetchUser = require("../middlewares/fetchUser");
+const express = require("express");
 const router = express.Router();
 
-router.post("/createMsg/:chatId", fetchUser, msgController.createMsg);
-router.get("/getMsgs/:chatId", fetchUser, msgController.getMsgs);
+router.post("/createMsg/:chatId", msgController.createMsg);
+router.get("/getMsgs/:chatId", msgController.getMsgs);
 
 module.exports = router;

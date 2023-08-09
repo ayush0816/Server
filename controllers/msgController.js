@@ -1,14 +1,17 @@
 const MessageModel = require("../Models/messages");
+const ChatModel = require("../Models/chat");
 
 const createMsg = async (req, res) => {
   try {
     const { chatId } = req.params;
     const { sender, messageBody } = req.body;
+    console.log(req.params);
+    console.log(req.body);
 
     const newMessage = new MessageModel({
       chatId,
       sender,
-      text,
+      messageBody,
     });
     await newMessage.save();
 
@@ -25,7 +28,7 @@ const getMsgs = async (req, res) => {
   try {
     const { chatId } = req.params;
 
-    const chat = await Chat.findById(chatId);
+    const chat = await ChatModel.findById(chatId);
     if (!chat) {
       return res.status(404).json({ message: "Chat not found" });
     }
