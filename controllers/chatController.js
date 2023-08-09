@@ -2,18 +2,29 @@ const ChatModel = require("../Models/chat");
 const UserModel = require("../Models/user");
 
 const createChat = async (req, res) => {
-  const chat = new ChatModel({
-    userid: req.id,
-    chantname: req.body.chatname,
-    urgent: req.body.description,
-  });
+  try {
+    const { chatname, urgent } = req.body;
+    const userId = req.id;
 
-  const user = await UserModel.findById(req.id);
-  if (!user) {
-    console.log("User not found!!");
+    const chat = new ChatModel({
+      userid: userId,
+      chatname,
+      urgent,
+    });
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.chatMsgs.push({ chatid: chat._id });
+    await user.save();
+
+    res.status(201).json({ message: "Chat created successfully", chat });
+  } catch (error) {
+    console.error("Error creating chat:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-  user.chatMsgs.push({ chatid: chat._id });
-  user.save();
 };
 const getChats = async (req, res) => {
   try {

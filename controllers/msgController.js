@@ -30,7 +30,7 @@ const getMsgs = async (req, res) => {
       return res.status(404).json({ message: "Chat not found" });
     }
 
-    const messages = await MessageModel.find({ chatId });
+    const messages = await MessageModel.find({ chatId }).sort({ timestamp: 1 });
 
     res.status(200).json({ messages });
   } catch (error) {
