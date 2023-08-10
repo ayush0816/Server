@@ -1,6 +1,8 @@
 const ChatModel = require("../Models/chat");
 const UserModel = require("../Models/user");
 const MessageModel = require("../Models/messages");
+const UserdbModel = require("../Models/userdb");
+const db = require("../database/db");
 
 const createChat = async (req, res) => {
   try {
@@ -27,6 +29,29 @@ const createChat = async (req, res) => {
 
     user.chatMsgs.push({ chatid: chat._id });
     await user.save();
+
+    res.status(201).json({ message: "Chat created successfully", chat });
+  } catch (error) {
+    console.error("Error creating chat:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const addChat = async (req, res) => {
+  try {
+    const { userId, message } = req.body;
+    console.log(req.body);
+    const timestamp = new Date();
+
+    // Creating a new chat model
+    const chat = new UserdbModel({
+      userID: userId,
+      timestamp: timestamp,
+      data: message,
+    });
+
+    // saving the chats to the db
+    await chat.save();
 
     res.status(201).json({ message: "Chat created successfully", chat });
   } catch (error) {
@@ -64,4 +89,4 @@ const getChats = async (req, res) => {
   }
 };
 
-module.exports = { createChat, getChats };
+module.exports = { createChat, getChats, addChat };
