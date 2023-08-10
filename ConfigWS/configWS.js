@@ -3,8 +3,6 @@ let io;
 function initialize(server, params) {
   io = new socketIO.Server(server, params);
 
-  // Add event handlers and other socket-related logic here
-
   return io;
 }
 
