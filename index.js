@@ -2,10 +2,12 @@ const express = require("express");
 const db = require("./database/db");
 const http = require("http");
 const { initialize, getIO } = require("./ConfigWS/configWS");
+const cors = require("cors");
 
 const app = express();
 const port = 8080;
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth"));
@@ -20,11 +22,32 @@ initialize(httpserver, {
 });
 
 const io = getIO();
+// var chatRooms = {};
 
-io.sockets.on("connection", function (socket) {
-  socket.on("join", (message) => {
-    socket.join(message.roomid);
-    console.log("join");
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("joinRoom", (chatID) => {
+    socket.join(chatID); // Join the specified chat room
+    // if (!chatRooms[chatID]) {
+    //   chatRooms[chatID] = [];
+    // }
+    // console.log("chatRooms: ", chatRooms)
+    // socket.emit("allMessages", chatRooms[chatID]); // Send existing messages to the joining user
+  });
+
+  socket.on("message", (data) => {
+    const { chatID, message } = data;
+    // if (chatRooms[chatID]) {
+    //   chatRooms[chatID].push(message);
+    //   console.log(chatID,message);
+  // }
+      io.to(chatID).emit("newMessage", message); // Emit the new message to everyone in the chat room
+    }
+  );
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
   });
 });
 
