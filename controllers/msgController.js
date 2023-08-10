@@ -8,6 +8,7 @@ const createMsg = async (req, res) => {
     console.log(req.params);
     console.log(req.body);
 
+    // Making new message and saving it to db
     const newMessage = new MessageModel({
       chatId,
       sender,
@@ -28,11 +29,13 @@ const getMsgs = async (req, res) => {
   try {
     const { chatId } = req.params;
 
+    //Finding msgs for a given chat
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
       return res.status(404).json({ message: "Chat not found" });
     }
 
+    // Fetching those msgs from db and sorting based on timestamp
     const messages = await MessageModel.find({ chatId }).sort({ timestamp: 1 });
 
     res.status(200).json({ messages });

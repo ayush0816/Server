@@ -8,13 +8,18 @@ const createChat = async (req, res) => {
     console.log(req.body);
     const userId = req.id;
 
+    // Creating a new chat model
     const chat = new ChatModel({
       userid: userId,
       chatname,
       urgent,
     });
     console.log(userId);
+
+    // saving the chats to the db
     await chat.save();
+
+    // Adding those chats to usermodel db
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -29,14 +34,17 @@ const createChat = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 const getChats = async (req, res) => {
   try {
+    // Finding the user by userid
     const user = await UserModel.findById(req.id);
     if (!user) {
       console.log("User not found!!");
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Fetching user messages using chat ids
     const chatIds = user.chatMsgs.map((chatMsg) => chatMsg.chatid);
     const messages = await MessageModel.find({ chatId: { $in: chatIds } });
 

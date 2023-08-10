@@ -6,6 +6,7 @@ function initialize(server, params) {
   return io;
 }
 
+// Getting the io instance
 function getIO() {
   if (!io) {
     throw new Error("Socket.IO instance has not been initialized.");
