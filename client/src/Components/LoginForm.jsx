@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const FormContainer = styled.div`
   background-color: white;
@@ -36,6 +37,7 @@ const Button = styled.button`
 
 export const LoginForm = () => {
   const port = "http://localhost:8080";
+  let navigate = useNavigate();
   const [creds, setcreds] = useState({ email: "", password: "" });
   const handleChange = (e) => {
     setcreds({ ...creds, [e.target.name]: e.target.value });
@@ -50,6 +52,10 @@ export const LoginForm = () => {
       body: JSON.stringify({ email: creds.email, password: creds.password }),
     });
     const json = await response.json();
+
+    if (json.status === "success") {
+      navigate("/message");
+    }
     console.log(json);
   };
 
